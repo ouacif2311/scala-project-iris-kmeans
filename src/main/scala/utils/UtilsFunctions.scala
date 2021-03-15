@@ -4,7 +4,8 @@ import scala.io.Source
 
 object UtilsFunctions {
 
-  def getirisclasse (label:String):Double={
+  /** Charge les classes d'Iris  */
+  def getIrisClasse (label:String):Double={
     label match {
       case "Iris-setosa" =>  return 0
       case "Iris-versicolor" =>  return 1
@@ -13,6 +14,9 @@ object UtilsFunctions {
     }
   }
 
+  /** Extraire le fichier dataIris,
+   *  stocker les données dans une matrice
+   * de taille (150 lignes, 5 colonnes, la dernière colonne représentant la classe réelle) */
   def dataFromFileToMatrix(ligne:Int,colonne:Int,fileSource:String):Array[Array[Double]]={
     val table=Array.ofDim[Double](ligne,colonne)
     val filename = "fileopen.scala"
@@ -26,7 +30,7 @@ object UtilsFunctions {
             table(i)(j)=element.toDouble
           }
           else{
-            table(i)(j)=getirisclasse(element)
+            table(i)(j)=getIrisClasse(element)
           }
         }
       }
@@ -37,21 +41,25 @@ object UtilsFunctions {
     return table
   }
 
-  def som(tab:Array[Double]):Double={
-    var s=0.0
-    for (i<-0 until(tab.length)){
-      s+=tab(i)
+  /**  */
+  def extractClassefromData (data:Array[Array[Double]],x:Array[Array[Double]],y:Array[Array[Int]]):Unit={
+
+    var nbrLignes = data.length
+    var nbrColonnes = data(0).length
+    for (i <- 0 until nbrLignes) {
+      for (j <- 0 until nbrColonnes){
+        if (j != nbrColonnes-1){
+          x(i)(j)= data(i)(j)
+        }
+        else{
+          y(i)(0) = data(i)(j).toInt
+        }
+      }
     }
-    return s
   }
 
-  def moy(tab:Array[Double]):Double={
-    var m=0.0
-    m=(1.0/tab.length)*som(tab)
-    return m
-  }
-
-  def matrixToTab(tab:Array[Array[Double]],ligne:Int,n:Int): Array[Double] ={
+  /** Extraire la colonne d une matrice */
+  def extractColumnfromMatrix(tab:Array[Array[Double]],ligne:Int,n:Int): Array[Double] ={
     var myArray = new Array[Double](ligne)
     for(i<-0 until ligne){
       myArray(i) = tab(i)(n)
@@ -59,6 +67,23 @@ object UtilsFunctions {
     return myArray
   }
 
+  /** Calcule la somme d un tableau   */
+  def sum(tab:Array[Double]):Double={
+    var s=0.0
+    for (i<-0 until(tab.length)){
+      s+=tab(i)
+    }
+    return s
+  }
+
+ /** Calcule la moyenne d un tableau  */
+  def moyenne(tab:Array[Double]):Double={
+    var m=0.0
+    m=(1.0/tab.length)*sum(tab)
+    return m
+  }
+
+  /** Calcule de variance d un tableau */
   def variance(tab:Array[Double],m:Double,ligne:Int):Double={
     var Var=0.0
     for(i<-0 until ligne){
@@ -67,12 +92,14 @@ object UtilsFunctions {
     return Var
   }
 
+  /** Calcule de l écart type d un tableau */
   def ecartType(tab:Array[Double],m:Double,ligne:Int):Double={
     var e=0.0
     e=scala.math.sqrt( variance(tab,m,ligne))
     return e
   }
 
+  /** Calcule de la covariance d un tableau */
   def covariance(tab:Array[Array[Double]],c1:Int,c2:Int,l:Int,m1:Double,m2:Double):Double={
     //var cov=0.0
     var som=0.0
@@ -82,4 +109,12 @@ object UtilsFunctions {
     var cov=som-(m1*m2)
     return cov
   }
+
+  /** Calcule de coefficient de correlation */
+  def coefficientCorrelation(cov:Double,ecartType1:Double,ecartType2:Double):Double={
+   var r=0.0
+    r=cov/(ecartType1*ecartType2)
+    return r
+  }
+
 }

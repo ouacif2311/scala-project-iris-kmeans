@@ -1,4 +1,7 @@
+
+
 import utils.UtilsFunctions
+
 
 object Project {
 
@@ -12,31 +15,38 @@ object Project {
     var SepalWidth = new Array[Double](L)
     var PetalLength = new Array[Double](L)
     var PetalWidth = new Array[Double](L)
-
+   /** Premier partie du projet:
+    * Calcule de la moyenne, écart type,
+    * la variance pour chaque variable étudié (caractere);   */
     datairis=UtilsFunctions.dataFromFileToMatrix(L,C,"src/ressources/iris.data")
+    var x=Array.ofDim[Double](L,C-1)
+    var y=Array.ofDim[Int](L,1)
+    UtilsFunctions.extractClassefromData (datairis:Array[Array[Double]],x:Array[Array[Double]],y:Array[Array[Int]])
 
-    for(i<-0 until L)
-    {
+    println("la matrice de donnée data iris:")
+    for(i<-0 until L) {
       for(j <-0 until C-1) {
         print(datairis(i)(j) + ", ")
       }
       println()
     }
+
     /*for (i<-0 until L){
       print(moyArray(i )+ ",")}*/
+
     println()
-    SepalLength=UtilsFunctions.matrixToTab(datairis,L,0)
-    var m = UtilsFunctions.moy(SepalLength)
+    SepalLength=UtilsFunctions.extractColumnfromMatrix(datairis,L,0)
+    var m = UtilsFunctions.moyenne(SepalLength)
     println("la moyenne SepalLength:"+" "+ m)
     //println("on verra "+ 1.0/150)
-    SepalWidth=UtilsFunctions.matrixToTab(datairis,L,1)
-    var m1 = UtilsFunctions.moy(SepalWidth)
+    SepalWidth=UtilsFunctions.extractColumnfromMatrix(datairis,L,1)
+    var m1 = UtilsFunctions.moyenne(SepalWidth)
     println("la moyenne SepalWidth:"+" "+ m1)
-    PetalLength=UtilsFunctions.matrixToTab(datairis,L,2)
-    var m2 = UtilsFunctions.moy(PetalLength)
+    PetalLength=UtilsFunctions.extractColumnfromMatrix(datairis,L,2)
+    var m2 = UtilsFunctions.moyenne(PetalLength)
     println("la moyenne PetalLength:"+" "+ m2)
-    PetalWidth=UtilsFunctions.matrixToTab(datairis,L,3)
-    var m3 = UtilsFunctions.moy(PetalWidth)
+    PetalWidth=UtilsFunctions.extractColumnfromMatrix(datairis,L,3)
+    var m3 = UtilsFunctions.moyenne(PetalWidth)
     println("la moyenne PetalWidth:"+" "+ m3)
     println()
     var v=UtilsFunctions.variance(SepalLength,m,L)
@@ -70,18 +80,25 @@ object Project {
     var cov5=UtilsFunctions.covariance(datairis,2,3,L,m2,m3)
     println("la cov y2y3:"+" "+cov5)
     println()
-    var r=cov/(e*e1)
-    println("la coeﬀicient de corrélation yy1:"+" "+r)
-    var r1=cov1/(e*e2)
-    println("la coeﬀicient de corrélation yy2:"+" "+r1)
-    var r2=cov2/(e*e3)
-    println("la coeﬀicient de corrélation yy3:"+" "+r2)
-    var r3=cov3/(e1*e2)
-    println("la coeﬀicient de corrélation y1y2:"+" "+r3)
-    var r4=cov4/(e1*e3)
-    println("la coeﬀicient de corrélation y1y3:"+" "+r4)
-    var r5=cov5/(e2*e3)
-    println("la coeﬀicient de corrélation y2y3:"+" "+r5)
-  }
+    var r=UtilsFunctions.coefficientCorrelation(cov,e,e1)
+    println("le coeﬀicient de corrélation yy1:"+" "+r)
+    var r1=UtilsFunctions.coefficientCorrelation(cov1,e,e2)
+    println("le coeﬀicient de corrélation yy2:"+" "+r1)
+    var r2=UtilsFunctions.coefficientCorrelation(cov2,e,e3)
+    println("le coeﬀicient de corrélation yy3:"+" "+r2)
+    var r3=UtilsFunctions.coefficientCorrelation(cov3,e1,e2)
+    println("le coeﬀicient de corrélation y1y2:"+" "+r3)
+    var r4=UtilsFunctions.coefficientCorrelation(cov4,e1,e3)
+    println("le coeﬀicient de corrélation y1y3:"+" "+r4)
+    var r5=UtilsFunctions.coefficientCorrelation(cov5,e2,e3)
+    println("le coeﬀicient de corrélation y2y3:"+" "+r5)
 
-}
+  /** Deuxième partie du projet ;
+   * implémentation de l algorithme de classification Kmeans*/
+  var pro=new Kmeans()
+    var p= pro.fit(x)
+    for(i<-0 until L)
+      println(p(i)(0)+" => "+ y(i)(0) )
+
+
+}}
