@@ -41,7 +41,7 @@ object UtilsFunctions {
     return table
   }
 
-  /**  */
+  /** Extraire la colonne qui contient la classe */
   def extractClassefromData (data:Array[Array[Double]],x:Array[Array[Double]],y:Array[Array[Int]]):Unit={
 
     var nbrLignes = data.length
